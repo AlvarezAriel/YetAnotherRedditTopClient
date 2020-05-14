@@ -3,29 +3,47 @@ package me.ariel.redditop.data
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import org.threeten.bp.OffsetDateTime
 
 typealias EntityID = String
 
 @Entity(
     tableName = "Entries"
 )
-class Entry(
+data class Entry(
     @PrimaryKey(autoGenerate = false)
     val uid: EntityID,
 
     @ColumnInfo(name = "title")
     val title: String,
 
+    @ColumnInfo(name = "url")
+    val url: String,
+
+    @ColumnInfo(name = "thumbnail")
+    val thumbnail: String,
+
     @ColumnInfo(name = "author")
-    val author:String,
+    val author: String,
 
     @ColumnInfo(name = "date")
-    val date: OffsetDateTime? = null,
+    val date: Long,
 
     @ColumnInfo(name = "comments_count")
     val commentsCount: Int,
 
     @ColumnInfo(name = "is_read")
-    val isRead: Int
-)
+    val isRead: Boolean
+) {
+
+    /**
+     * Not all entries have a thumbnails.
+     * Instead, they can have a label matching some default image.
+     */
+    fun getFinalThumbnail() = when (thumbnail) {
+        "self" -> "https://www.reddit.com/static/self_default2.png"
+        "default" -> "https://www.reddit.com/static/noimage.png"
+        "nsfw" -> "https://www.reddit.com/static/nsfw2.png"
+        else -> thumbnail
+    }
+
+}
