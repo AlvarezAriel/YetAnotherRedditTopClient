@@ -1,17 +1,17 @@
 package me.ariel.redditop.di
 
 import android.content.Context
+import androidx.lifecycle.ViewModel
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import dagger.BindsInstance
-import dagger.Component
-import dagger.Module
-import dagger.Provides
+import dagger.*
 import dagger.android.AndroidInjector
 import dagger.android.ContributesAndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
+import dagger.multibindings.IntoMap
 import me.ariel.redditop.BaseApplication
 import me.ariel.redditop.MainActivity
+import me.ariel.redditop.MainActivityViewModel
 import me.ariel.redditop.actions.EntryActions
 import me.ariel.redditop.data.AppDatabase
 import me.ariel.redditop.data.EntriesDeserializer
@@ -29,7 +29,8 @@ import javax.inject.Singleton
         AndroidSupportInjectionModule::class,
         ApplicationModule::class,
         MainActivityModule::class
-    ])
+    ]
+)
 interface ApplicationComponent : AndroidInjector<BaseApplication> {
 
     @Component.Factory
@@ -67,7 +68,7 @@ open class ApplicationModule {
 
     @Singleton
     @Provides
-    fun provideRetrofitInstance(customConverter:GsonConverterFactory): Retrofit {
+    fun provideRetrofitInstance(customConverter: GsonConverterFactory): Retrofit {
         return Retrofit.Builder()
             .baseUrl(RedditApi.BASE_URL)
             .addConverterFactory(customConverter)
@@ -77,7 +78,7 @@ open class ApplicationModule {
 
     @Singleton
     @Provides
-    fun provideRedditApi(retrofit:Retrofit): RedditApi {
+    fun provideRedditApi(retrofit: Retrofit): RedditApi {
         return retrofit.create(RedditApi::class.java)
     }
 
@@ -97,9 +98,15 @@ open class ApplicationModule {
 @Module
 abstract class MainActivityModule {
 
-    @ContributesAndroidInjector(modules = [
-        ViewModelBuilder::class
-    ])
+    @ContributesAndroidInjector(
+        modules = [
+            ViewModelBuilder::class
+        ]
+    )
     internal abstract fun mainActivity(): MainActivity
 
+    @Binds
+    @IntoMap
+    @ViewModelKey(MainActivityViewModel::class)
+    abstract fun bindViewModel(viewmodel: MainActivityViewModel): ViewModel
 }

@@ -26,7 +26,7 @@ data class Entry(
     val author: String,
 
     @ColumnInfo(name = "date")
-    val date: Long,
+    val date_seconds: Long,
 
     @ColumnInfo(name = "comments_count")
     val commentsCount: Int,

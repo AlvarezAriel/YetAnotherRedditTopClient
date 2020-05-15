@@ -28,7 +28,7 @@ class EntriesDeserializer : JsonDeserializer<List<Entry>> {
                     url = it.get("url").asString,
                     thumbnail = it.get("thumbnail").asString,
                     author = it.get("author").asString,
-                    date = it.get("created_utc").asLong,
+                    date_seconds = it.get("created_utc").asLong,
                     commentsCount = it.get("num_comments").asInt,
                     isRead = false
                 )

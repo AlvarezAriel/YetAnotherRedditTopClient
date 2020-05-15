@@ -1,6 +1,7 @@
 package me.ariel.redditop
 
 import android.app.Application
+import com.jakewharton.threetenabp.AndroidThreeTen
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
@@ -18,6 +19,9 @@ class BaseApplication : Application(), HasAndroidInjector {
         super.onCreate()
         DaggerApplicationComponent.factory().create(applicationContext)
             .inject(this)
+
+        // Compatibility library for java.time.* for SDK < 26
+        AndroidThreeTen.init(this)
 
         if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
     }

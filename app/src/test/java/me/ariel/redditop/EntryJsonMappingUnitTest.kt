@@ -32,7 +32,7 @@ class EntryJsonMappingUnitTest {
                 url = "https://www.reddit.com/r/Showerthoughts/comments/gj54t1/in_a_span_of_a_few_years_our_parents_go_from/",
                 thumbnail = "self",
                 author = "BeerBeily",
-                date = 1589396014,
+                date_seconds = 1589396014,
                 commentsCount = 2126,
                 isRead = false
             ),
@@ -46,7 +46,7 @@ class EntryJsonMappingUnitTest {
                 url = "https://i.redd.it/j56baxy7any41.jpg",
                 thumbnail = "https://b.thumbs.redditmedia.com/etXfBE2et1teFqOCA4ze1_60pAhww76PnsX0uVyOq7I.jpg",
                 author = "nicecanofspam",
-                date = 1589424723,
+                date_seconds = 1589424723,
                 commentsCount = 1266,
                 isRead = false
             ),
