@@ -46,6 +46,7 @@ class EntryJsonMappingUnitTest {
                 title = "I'm a 35 Year old male and have wanted a Husky since I was 10. World, say hello to \"Winks\"",
                 url = "https://i.redd.it/j56baxy7any41.jpg",
                 thumbnail = "https://b.thumbs.redditmedia.com/etXfBE2et1teFqOCA4ze1_60pAhww76PnsX0uVyOq7I.jpg",
+                preview = "https://preview.redd.it/j56baxy7any41.jpg?auto=webp&s=aec4e601a70cc992c2e8b25e4c1f5a7cfe91b0fc",
                 author = "nicecanofspam",
                 date_seconds = 1589424723,
                 ups = 90742,
