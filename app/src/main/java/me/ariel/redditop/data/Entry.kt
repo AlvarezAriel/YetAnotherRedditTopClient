@@ -32,7 +32,10 @@ data class Entry(
     val commentsCount: Int,
 
     @ColumnInfo(name = "is_read")
-    val isRead: Boolean
+    val isRead: Boolean = false,
+
+    @ColumnInfo(name = "is_dismissed")
+    val isDismissed: Boolean = false
 ) {
 
     /**

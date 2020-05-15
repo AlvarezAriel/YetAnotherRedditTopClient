@@ -13,4 +13,6 @@ abstract class AppDatabase : RoomDatabase() {
             AppDatabase::class.java, "redditop.db"
         ).build()
     }
+
+    abstract fun albumDao(): EntriesDao
 }

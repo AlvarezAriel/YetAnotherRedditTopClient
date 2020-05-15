@@ -12,8 +12,10 @@ import dagger.android.ContributesAndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
 import me.ariel.redditop.BaseApplication
 import me.ariel.redditop.MainActivity
+import me.ariel.redditop.actions.EntryActions
 import me.ariel.redditop.data.AppDatabase
 import me.ariel.redditop.data.EntriesDeserializer
+import me.ariel.redditop.data.EntriesRepository
 import me.ariel.redditop.data.Entry
 import me.ariel.redditop.network.RedditApi
 import retrofit2.Retrofit
@@ -62,6 +64,7 @@ open class ApplicationModule {
         return GsonConverterFactory.create(gson)
     }
 
+
     @Singleton
     @Provides
     fun provideRetrofitInstance(customConverter:GsonConverterFactory): Retrofit {
@@ -78,10 +81,20 @@ open class ApplicationModule {
         return retrofit.create(RedditApi::class.java)
     }
 
+    @Singleton
+    @Provides
+    fun provideEntriesRepository(appDatabase: AppDatabase): EntriesRepository {
+        return EntriesRepository(appDatabase.albumDao())
+    }
+
+    @Singleton
+    @Provides
+    fun provideEntryActions(redditApi: RedditApi, repository: EntriesRepository): EntryActions {
+        return EntryActions(redditApi, repository)
+    }
 }
 
-
-@Module()
+@Module
 abstract class MainActivityModule {
 
     @ContributesAndroidInjector(modules = [
