@@ -70,6 +70,12 @@ class MainActivity : DaggerAppCompatActivity() {
             viewModel.downloadImage()
         }
 
+        entry_detail_thumbnail.setOnClickListener {
+            viewModel.selectedEntry.value?.getDownloadableImageUrl()?.let {
+                FullImageActivity.openWithImageUrl(this, it)
+            }
+        }
+
         viewModel.isDownloadingImage.observe(this, Observer {
             notification_banner.isVisible = it
         })
