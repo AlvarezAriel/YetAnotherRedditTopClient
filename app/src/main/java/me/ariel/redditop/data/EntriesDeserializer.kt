@@ -22,11 +22,14 @@ class EntriesDeserializer : JsonDeserializer<List<Entry>> {
                 it.asJsonObject.getAsJsonObject("data")
             }
             .map {
+                val previewImages = it.getAsJsonObject("preview")?.getAsJsonArray("images")
+                val preview = previewImages?.firstOrNull()?.asJsonObject?.getAsJsonObject("source")?.get("url")?.asString?.replace("&amp;", "&")
                 Entry(
                     uid = it.get("name").asString,
                     title = it.get("title").asString,
                     url = it.get("url").asString,
                     thumbnail = it.get("thumbnail").asString,
+                    preview = preview,
                     author = it.get("author").asString,
                     date_seconds = it.get("created_utc").asLong,
                     ups = it.get("ups").asLong,

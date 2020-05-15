@@ -28,6 +28,9 @@ data class Entry(
     @ColumnInfo(name = "thumbnail")
     val thumbnail: String,
 
+    @ColumnInfo(name = "preview")
+    val preview: String? = null,
+
     @ColumnInfo(name = "author")
     val author: String,
 

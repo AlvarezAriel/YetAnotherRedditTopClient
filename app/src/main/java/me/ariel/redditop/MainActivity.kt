@@ -64,11 +64,11 @@ class MainActivity : DaggerAppCompatActivity() {
         }
 
         viewModel.selectedEntry.observe(this, Observer {
-            if(it != null) {
+            if (it != null) {
                 entry_detail_title.text = it.title
 
                 Glide.with(this)
-                    .load(it.getFinalThumbnail())
+                    .load(it.preview ?: it.getFinalThumbnail())
                     .fitCenter()
                     .into(entry_detail_thumbnail)
             }
@@ -86,7 +86,7 @@ class EntryItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 }
 
 class EntryListAdapter(
-    private val viewModel:MainActivityViewModel,
+    private val viewModel: MainActivityViewModel,
     private val onItemClicked: (Entry) -> Unit
 ) : RecyclerView.Adapter<EntryItemViewHolder>() {
 
@@ -100,7 +100,10 @@ class EntryListAdapter(
      * Takes the diff with the current list and the incoming
      * update and notifies the adapter accordingly.
      */
-    class MediaFileDiffCallback(private val oldList: List<Entry>, private val newList: List<Entry>) : DiffUtil.Callback() {
+    class MediaFileDiffCallback(
+        private val oldList: List<Entry>,
+        private val newList: List<Entry>
+    ) : DiffUtil.Callback() {
 
         override fun getOldListSize(): Int = oldList.size
 
@@ -146,7 +149,9 @@ class EntryListAdapter(
         holder.dismissBtn.setOnClickListener { viewModel.dismissEntry(entry) }
 
         val now = Instant.now().atZone(ZoneId.systemDefault()).toEpochSecond() * 1000L
-        val creationDate = Instant.ofEpochMilli(entry.date_seconds * 1000L).atZone(ZoneId.systemDefault()).toEpochSecond() * 1000L
+        val creationDate =
+            Instant.ofEpochMilli(entry.date_seconds * 1000L).atZone(ZoneId.systemDefault())
+                .toEpochSecond() * 1000L
 
         holder.date.text = DateUtils.getRelativeTimeSpanString(creationDate, now, MINUTE_IN_MILLIS)
 

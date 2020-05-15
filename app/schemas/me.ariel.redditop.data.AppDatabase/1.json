@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "d82043e2d25044a7a75ebbc5948f5e1c",
+    "identityHash": "316a30db6628d4ff4035e94d1ae75cbf",
     "entities": [
       {
         "tableName": "Entries",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`internal_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `uid` TEXT NOT NULL, `title` TEXT NOT NULL, `url` TEXT NOT NULL, `thumbnail` TEXT NOT NULL, `author` TEXT NOT NULL, `date` INTEGER NOT NULL, `ups` INTEGER NOT NULL, `comments_count` INTEGER NOT NULL, `is_read` INTEGER NOT NULL, `is_dismissed` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`internal_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `uid` TEXT NOT NULL, `title` TEXT NOT NULL, `url` TEXT NOT NULL, `thumbnail` TEXT NOT NULL, `preview` TEXT, `author` TEXT NOT NULL, `date` INTEGER NOT NULL, `ups` INTEGER NOT NULL, `comments_count` INTEGER NOT NULL, `is_read` INTEGER NOT NULL, `is_dismissed` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "internal_id",
@@ -37,6 +37,12 @@
             "columnName": "thumbnail",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "preview",
+            "columnName": "preview",
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "author",
@@ -97,7 +103,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd82043e2d25044a7a75ebbc5948f5e1c')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '316a30db6628d4ff4035e94d1ae75cbf')"
     ]
   }
 }
