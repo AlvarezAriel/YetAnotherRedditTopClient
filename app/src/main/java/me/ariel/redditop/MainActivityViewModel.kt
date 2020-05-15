@@ -28,6 +28,14 @@ class MainActivityViewModel @Inject constructor(
             .subscribe { Timber.d("Refreshed entry: %s", it) }
     }
 
+    fun dismissAll() {
+        entries.value?.let {
+            it.forEach {
+                dismissEntry(it)
+            }
+        }
+    }
+
     fun dismissEntry(someEntry:Entry) {
         repository.dismiss(someEntry).subscribe {
             Timber.d("Dismissed: %s", someEntry.title)

@@ -45,7 +45,7 @@ class MainActivity : DaggerAppCompatActivity() {
 
         viewModel.entries.observe(this, Observer {
             adapter.updateDataSet(it)
-
+            btn_dismiss_all.text = getString(R.string.dismiss_all, it.size)
         })
 
         viewModel.isRefreshing.observe(this, Observer {
@@ -54,6 +54,10 @@ class MainActivity : DaggerAppCompatActivity() {
 
         entries_swipe_refresh.setOnRefreshListener {
             viewModel.refreshEntries()
+        }
+
+        btn_dismiss_all.setOnClickListener {
+            viewModel.dismissAll()
         }
 
     }
