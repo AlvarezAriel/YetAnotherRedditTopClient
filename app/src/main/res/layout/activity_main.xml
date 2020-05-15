@@ -8,14 +8,6 @@
     android:orientation="horizontal"
     tools:context=".MainActivity">
 
-
-    <include
-        layout="@layout/include_entry_detail"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/include"/>
-
     <include
         android:id="@+id/include"
         layout="@layout/include_entries_list"
@@ -25,5 +17,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <include
+        layout="@layout/include_entry_detail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/include"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

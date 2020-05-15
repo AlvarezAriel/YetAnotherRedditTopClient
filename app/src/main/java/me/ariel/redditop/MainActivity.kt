@@ -1,5 +1,6 @@
 package me.ariel.redditop
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.text.format.DateUtils
 import android.text.format.DateUtils.MINUTE_IN_MILLIS
@@ -10,6 +11,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
@@ -25,6 +27,7 @@ import org.threeten.bp.ZoneId
 import timber.log.Timber
 import javax.inject.Inject
 
+
 class MainActivity : DaggerAppCompatActivity() {
 
     @Inject
@@ -36,6 +39,7 @@ class MainActivity : DaggerAppCompatActivity() {
         EntryListAdapter(viewModel) {
             Timber.d("On item clicked: %s", it.title)
             viewModel.selectedEntry.postValue(it)
+            detail_container.isVisible = true
         }
     }
 
@@ -55,12 +59,12 @@ class MainActivity : DaggerAppCompatActivity() {
             entries_swipe_refresh.isRefreshing = it
         })
 
-        entries_swipe_refresh.setOnRefreshListener {
-            viewModel.refreshEntries()
-        }
+        entries_swipe_refresh.setOnRefreshListener { viewModel.refreshEntries() }
 
-        btn_dismiss_all.setOnClickListener {
-            viewModel.dismissAll()
+        btn_dismiss_all.setOnClickListener { viewModel.dismissAll() }
+
+        btn_close.setOnClickListener {
+            detail_container.isVisible = false
         }
 
         viewModel.selectedEntry.observe(this, Observer {
@@ -71,9 +75,24 @@ class MainActivity : DaggerAppCompatActivity() {
                     .load(it.preview ?: it.getFinalThumbnail())
                     .fitCenter()
                     .into(entry_detail_thumbnail)
+            } else {
+                detail_container.isVisible = false
             }
         })
 
+    }
+
+    fun updateRotationDependentUi() {
+        if(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            btn_close.isVisible = false
+        } else if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            btn_close.isVisible = true
+        }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        updateRotationDependentUi()
     }
 }
 
@@ -83,6 +102,7 @@ class EntryItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val date: TextView = itemView.findViewById(R.id.entry_date)
     val author: TextView = itemView.findViewById(R.id.entry_author)
     val dismissBtn: Button = itemView.findViewById(R.id.btn_dismiss)
+    val commentsCount: TextView = itemView.findViewById(R.id.entry_comments_count)
 }
 
 class EntryListAdapter(
@@ -154,6 +174,7 @@ class EntryListAdapter(
                 .toEpochSecond() * 1000L
 
         holder.date.text = DateUtils.getRelativeTimeSpanString(creationDate, now, MINUTE_IN_MILLIS)
+        holder.commentsCount.text = holder.itemView.context.getString(R.string.n_comments, entry.commentsCount)
 
         Glide.with(holder.itemView)
             .load(entry.getFinalThumbnail())
