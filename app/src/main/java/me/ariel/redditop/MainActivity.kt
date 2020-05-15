@@ -38,7 +38,7 @@ class MainActivity : DaggerAppCompatActivity() {
     private val adapter by lazy {
         EntryListAdapter(viewModel) {
             Timber.d("On item clicked: %s", it.title)
-            viewModel.selectedEntry.postValue(it)
+            viewModel.selectEntry(it)
             detail_container.isVisible = true
         }
     }
@@ -103,6 +103,7 @@ class EntryItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val author: TextView = itemView.findViewById(R.id.entry_author)
     val dismissBtn: Button = itemView.findViewById(R.id.btn_dismiss)
     val commentsCount: TextView = itemView.findViewById(R.id.entry_comments_count)
+    val readIndicator: View = itemView.findViewById(R.id.entry_read_indicator)
 }
 
 class EntryListAdapter(
@@ -175,7 +176,7 @@ class EntryListAdapter(
 
         holder.date.text = DateUtils.getRelativeTimeSpanString(creationDate, now, MINUTE_IN_MILLIS)
         holder.commentsCount.text = holder.itemView.context.getString(R.string.n_comments, entry.commentsCount)
-
+        holder.readIndicator.setBackgroundResource(if(entry.isRead) R.drawable.ic_read_indicator_on else R.drawable.ic_read_indicator_off)
         Glide.with(holder.itemView)
             .load(entry.getFinalThumbnail())
             .fitCenter()

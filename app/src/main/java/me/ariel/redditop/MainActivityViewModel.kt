@@ -42,4 +42,11 @@ class MainActivityViewModel @Inject constructor(
             Timber.d("Dismissed: %s", someEntry.title)
         }
     }
+
+    fun selectEntry(entry: Entry) {
+        selectedEntry.postValue(entry)
+        repository.markAsRead(entry).subscribe {
+            Timber.d("Marked as read: %s", entry.title)
+        }
+    }
 }

@@ -23,4 +23,7 @@ class EntriesRepository(
     fun dismiss(entry:Entry) = dao.update(entry.copy(isDismissed = true))
         .subscribeOn(Schedulers.io())
 
+    fun markAsRead(entry:Entry) = dao.update(entry.copy(isRead = true))
+        .subscribeOn(Schedulers.io())
+
 }

@@ -5,6 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <View
+        android:id="@+id/entry_read_indicator"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_margin="4dp"
+        android:layout_marginEnd="60dp"
+        android:background="@drawable/ic_read_indicator_off"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/entry_thumbnail"
         android:layout_width="0dp"
@@ -71,7 +81,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="btn_dismiss,entry_title,@+id/entry_comments_count"/>
+        app:constraint_referenced_ids="btn_dismiss,entry_comments_count"/>
 
     <View
         android:id="@+id/view"
