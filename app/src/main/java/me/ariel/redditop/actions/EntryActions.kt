@@ -6,8 +6,10 @@ import android.media.MediaScannerConnection
 import android.webkit.MimeTypeMap
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
+import me.ariel.redditop.data.EntityID
 import me.ariel.redditop.data.EntriesRepository
 import me.ariel.redditop.network.RedditApi
 import me.ariel.redditop.utils.ReditopFileUtils
@@ -25,7 +27,7 @@ class EntryActions(
     val context: Context
 ) {
 
-    fun refreshTopEntries() = redditApi.top()
+    fun refreshTopEntries(): Flowable<Result<EntityID>> = redditApi.top()
         .subscribeOn(Schedulers.io())
         .flattenAsFlowable { it.asIterable() }
         .flatMapSingle { remoteEntry ->
@@ -43,9 +45,9 @@ class EntryActions(
                         )
                     )
                 }
-                completable.toSingleDefault(remoteEntry.uid)
+                completable.toSingleDefault(Result.success(remoteEntry.uid))
             }
-        }
+        }.onErrorReturn { Result.failure(it) }
 
     fun saveEntryImageToGallery(imageUrl:String):Single<File> {
 
