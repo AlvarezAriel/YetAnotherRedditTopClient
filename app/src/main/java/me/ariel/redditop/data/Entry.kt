@@ -39,7 +39,7 @@ data class Entry(
 ) {
 
     /**
-     * Not all entries have a thumbnails.
+     * Not all entries have thumbnails.
      * Instead, they can have a label matching some default image.
      */
     fun getFinalThumbnail() = when (thumbnail) {
