@@ -1,5 +1,6 @@
 package me.ariel.redditop
 
+import androidx.core.net.toUri
 import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,7 +18,9 @@ class MainActivityViewModel @Inject constructor(
 
     val entries = LiveDataReactiveStreams.fromPublisher(repository.findAll())
     val isRefreshing = MutableLiveData<Boolean>(false)
+    val isDownloadingImage = MutableLiveData<Boolean>(false)
     val selectedEntry = MutableLiveData<Entry?>(null)
+
 
     private val refresher = actions.refreshTopEntries()
         .observeOn(AndroidSchedulers.mainThread())
@@ -47,6 +50,24 @@ class MainActivityViewModel @Inject constructor(
         selectedEntry.postValue(entry)
         repository.markAsRead(entry).subscribe {
             Timber.d("Marked as read: %s", entry.title)
+        }
+    }
+
+    fun downloadImage() {
+        isDownloadingImage.postValue(true)
+        selectedEntry.value?.let {entry ->
+
+            val imageUrl = entry.getDownloadableImageUrl()
+
+            if(imageUrl != null) {
+                actions.saveEntryImageToGallery(imageUrl)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnError { isDownloadingImage.postValue(false) }
+                    .subscribe { file ->
+                        isDownloadingImage.postValue(false)
+                        Timber.d("Image saved to gallery: %s", file.toUri().toString())
+                    }
+            }
         }
     }
 }

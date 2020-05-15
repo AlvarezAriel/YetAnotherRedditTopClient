@@ -90,8 +90,8 @@ open class ApplicationModule {
 
     @Singleton
     @Provides
-    fun provideEntryActions(redditApi: RedditApi, repository: EntriesRepository): EntryActions {
-        return EntryActions(redditApi, repository)
+    fun provideEntryActions(redditApi: RedditApi, repository: EntriesRepository, context:Context): EntryActions {
+        return EntryActions(redditApi, repository, context)
     }
 }
 

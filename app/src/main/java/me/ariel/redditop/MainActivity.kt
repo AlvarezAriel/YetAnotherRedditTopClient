@@ -27,7 +27,6 @@ import org.threeten.bp.ZoneId
 import timber.log.Timber
 import javax.inject.Inject
 
-
 class MainActivity : DaggerAppCompatActivity() {
 
     @Inject
@@ -67,6 +66,14 @@ class MainActivity : DaggerAppCompatActivity() {
             detail_container.isVisible = false
         }
 
+        btn_download.setOnClickListener {
+            viewModel.downloadImage()
+        }
+
+        viewModel.isDownloadingImage.observe(this, Observer {
+            notification_banner.isVisible = it
+        })
+
         viewModel.selectedEntry.observe(this, Observer {
             if (it != null) {
                 entry_detail_title.text = it.title
@@ -75,6 +82,8 @@ class MainActivity : DaggerAppCompatActivity() {
                     .load(it.preview ?: it.getFinalThumbnail())
                     .fitCenter()
                     .into(entry_detail_thumbnail)
+
+                btn_download.isVisible = it.getDownloadableImageUrl() != null
             } else {
                 detail_container.isVisible = false
             }
@@ -83,9 +92,9 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 
     fun updateRotationDependentUi() {
-        if(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE){
+        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             btn_close.isVisible = false
-        } else if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+        } else if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             btn_close.isVisible = true
         }
     }
@@ -175,8 +184,9 @@ class EntryListAdapter(
                 .toEpochSecond() * 1000L
 
         holder.date.text = DateUtils.getRelativeTimeSpanString(creationDate, now, MINUTE_IN_MILLIS)
-        holder.commentsCount.text = holder.itemView.context.getString(R.string.n_comments, entry.commentsCount)
-        holder.readIndicator.setBackgroundResource(if(entry.isRead) R.drawable.ic_read_indicator_on else R.drawable.ic_read_indicator_off)
+        holder.commentsCount.text =
+            holder.itemView.context.getString(R.string.n_comments, entry.commentsCount)
+        holder.readIndicator.setBackgroundResource(if (entry.isRead) R.drawable.ic_read_indicator_on else R.drawable.ic_read_indicator_off)
         Glide.with(holder.itemView)
             .load(entry.getFinalThumbnail())
             .fitCenter()

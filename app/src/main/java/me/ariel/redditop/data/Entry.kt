@@ -61,4 +61,9 @@ data class Entry(
         else -> thumbnail
     }
 
+    fun getDownloadableImageUrl(): String? =
+        if (listOf("png", "jpg", "webp").any { url.endsWith(it) }) {
+            url
+        } else preview
+
 }
