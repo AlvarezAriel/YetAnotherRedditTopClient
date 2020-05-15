@@ -17,6 +17,7 @@ class MainActivityViewModel @Inject constructor(
 
     val entries = LiveDataReactiveStreams.fromPublisher(repository.findAll())
     val isRefreshing = MutableLiveData<Boolean>(false)
+    val selectedEntry = MutableLiveData<Entry?>(null)
 
     private val refresher = actions.refreshTopEntries()
         .observeOn(AndroidSchedulers.mainThread())

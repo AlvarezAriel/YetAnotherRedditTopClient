@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import dagger.android.support.DaggerAppCompatActivity
-import kotlinx.android.synthetic.main.activity_main.*
-import me.ariel.redditop.data.EntityID
+import kotlinx.android.synthetic.main.include_entries_list.*
+import kotlinx.android.synthetic.main.include_entry_detail.*
 import me.ariel.redditop.data.Entry
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
@@ -33,7 +33,10 @@ class MainActivity : DaggerAppCompatActivity() {
     val viewModel by viewModels<MainActivityViewModel> { viewModelFactory }
 
     private val adapter by lazy {
-        EntryListAdapter(viewModel) { Timber.d("On item clicked: %s", it.title) }
+        EntryListAdapter(viewModel) {
+            Timber.d("On item clicked: %s", it.title)
+            viewModel.selectedEntry.postValue(it)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,6 +62,17 @@ class MainActivity : DaggerAppCompatActivity() {
         btn_dismiss_all.setOnClickListener {
             viewModel.dismissAll()
         }
+
+        viewModel.selectedEntry.observe(this, Observer {
+            if(it != null) {
+                entry_detail_title.text = it.title
+
+                Glide.with(this)
+                    .load(it.getFinalThumbnail())
+                    .fitCenter()
+                    .into(entry_detail_thumbnail)
+            }
+        })
 
     }
 }
