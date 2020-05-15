@@ -1,3 +1,3 @@
-## Reditop: yet another Reddit client
+## Redditop: yet another Reddit client
 
 ![Reditop Screenshot](/design/screenshot.jpg)
