@@ -33,6 +33,7 @@ class EntryJsonMappingUnitTest {
                 thumbnail = "self",
                 author = "BeerBeily",
                 date_seconds = 1589396014,
+                ups = 97165,
                 commentsCount = 2126,
                 isRead = false
             ),
@@ -47,6 +48,7 @@ class EntryJsonMappingUnitTest {
                 thumbnail = "https://b.thumbs.redditmedia.com/etXfBE2et1teFqOCA4ze1_60pAhww76PnsX0uVyOq7I.jpg",
                 author = "nicecanofspam",
                 date_seconds = 1589424723,
+                ups = 90742,
                 commentsCount = 1266,
                 isRead = false
             ),

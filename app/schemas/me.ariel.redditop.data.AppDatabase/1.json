@@ -2,12 +2,18 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "61753f0a5d74cccdf2fc49dca583692f",
+    "identityHash": "d82043e2d25044a7a75ebbc5948f5e1c",
     "entities": [
       {
         "tableName": "Entries",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` TEXT NOT NULL, `title` TEXT NOT NULL, `url` TEXT NOT NULL, `thumbnail` TEXT NOT NULL, `author` TEXT NOT NULL, `date` INTEGER NOT NULL, `comments_count` INTEGER NOT NULL, `is_read` INTEGER NOT NULL, `is_dismissed` INTEGER NOT NULL, PRIMARY KEY(`uid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`internal_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `uid` TEXT NOT NULL, `title` TEXT NOT NULL, `url` TEXT NOT NULL, `thumbnail` TEXT NOT NULL, `author` TEXT NOT NULL, `date` INTEGER NOT NULL, `ups` INTEGER NOT NULL, `comments_count` INTEGER NOT NULL, `is_read` INTEGER NOT NULL, `is_dismissed` INTEGER NOT NULL)",
         "fields": [
+          {
+            "fieldPath": "internal_id",
+            "columnName": "internal_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
           {
             "fieldPath": "uid",
             "columnName": "uid",
@@ -39,8 +45,14 @@
             "notNull": true
           },
           {
-            "fieldPath": "date",
+            "fieldPath": "date_seconds",
             "columnName": "date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ups",
+            "columnName": "ups",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -65,18 +77,27 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "uid"
+            "internal_id"
           ],
-          "autoGenerate": false
+          "autoGenerate": true
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_Entries_uid",
+            "unique": false,
+            "columnNames": [
+              "uid"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Entries_uid` ON `${TABLE_NAME}` (`uid`)"
+          }
+        ],
         "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '61753f0a5d74cccdf2fc49dca583692f')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd82043e2d25044a7a75ebbc5948f5e1c')"
     ]
   }
 }

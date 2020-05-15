@@ -1,6 +1,7 @@
 package me.ariel.redditop
 
 import androidx.lifecycle.LiveDataReactiveStreams
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import me.ariel.redditop.actions.EntryActions
@@ -14,11 +15,15 @@ class MainActivityViewModel @Inject constructor(
 ) : ViewModel() {
 
     val entries = LiveDataReactiveStreams.fromPublisher(repository.findAll())
+    val isRefreshing = MutableLiveData<Boolean>(false)
 
     private val refresher = actions.refreshTopEntries()
         .observeOn(AndroidSchedulers.mainThread())
 
     fun refreshEntries() {
-        refresher.subscribe { Timber.d("Refreshed entry: %s", it) }
+        isRefreshing.postValue(true)
+        refresher
+            .doOnComplete { isRefreshing.postValue(false) }
+            .subscribe { Timber.d("Refreshed entry: %s", it) }
     }
 }

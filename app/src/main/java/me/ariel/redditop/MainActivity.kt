@@ -32,7 +32,7 @@ class MainActivity : DaggerAppCompatActivity() {
     val viewModel by viewModels<MainActivityViewModel> { viewModelFactory }
 
     private val adapter by lazy {
-        EntryListAdapter { Timber.d("On item clicked: %s", it) }
+        EntryListAdapter { Timber.d("On item clicked: %s", it.title) }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +44,17 @@ class MainActivity : DaggerAppCompatActivity() {
 
         viewModel.entries.observe(this, Observer {
             adapter.updateDataSet(it)
+
         })
+
+        viewModel.isRefreshing.observe(this, Observer {
+            entries_swipe_refresh.isRefreshing = it
+        })
+
+        entries_swipe_refresh.setOnRefreshListener {
+            viewModel.refreshEntries()
+        }
+
     }
 }
 
@@ -56,7 +66,7 @@ class EntryItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 }
 
 class EntryListAdapter(
-    private val onItemClicked: (EntityID) -> Unit
+    private val onItemClicked: (Entry) -> Unit
 ) : RecyclerView.Adapter<EntryItemViewHolder>() {
 
     private val entries = mutableListOf<Entry>()
@@ -65,6 +75,10 @@ class EntryListAdapter(
         setHasStableIds(true)
     }
 
+    /**
+     * Takes the diff with the current list and the incoming
+     * update and notifies the adapter accordingly.
+     */
     class MediaFileDiffCallback(private val oldList: List<Entry>, private val newList: List<Entry>) : DiffUtil.Callback() {
 
         override fun getOldListSize(): Int = oldList.size
@@ -72,7 +86,7 @@ class EntryListAdapter(
         override fun getNewListSize(): Int = newList.size
 
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return oldList[oldItemPosition].uid == newList[newItemPosition].uid
+            return oldList[oldItemPosition].internal_id == newList[newItemPosition].internal_id
         }
 
         override fun areContentsTheSame(oldPosition: Int, newPosition: Int): Boolean {
@@ -107,6 +121,8 @@ class EntryListAdapter(
         holder.title.text = entry.title
         holder.author.text = entry.author
 
+        holder.itemView.setOnClickListener { onItemClicked.invoke(entry) }
+
         val now = Instant.now().atZone(ZoneId.systemDefault()).toEpochSecond() * 1000L
         val creationDate = Instant.ofEpochMilli(entry.date_seconds * 1000L).atZone(ZoneId.systemDefault()).toEpochSecond() * 1000L
 
@@ -119,4 +135,8 @@ class EntryListAdapter(
             .into(holder.thumbnail)
     }
 
+    /**
+     * Required when using stable ids
+     */
+    override fun getItemId(position: Int): Long = entries[position].internal_id
 }

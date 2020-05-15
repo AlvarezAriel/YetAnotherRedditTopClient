@@ -2,15 +2,21 @@ package me.ariel.redditop.data
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 typealias EntityID = String
 
 @Entity(
-    tableName = "Entries"
+    tableName = "Entries",
+    indices = [Index("uid")]
 )
 data class Entry(
-    @PrimaryKey(autoGenerate = false)
+
+    @PrimaryKey(autoGenerate = true)
+    var internal_id: Long = 0,
+
+    @ColumnInfo(name = "uid")
     val uid: EntityID,
 
     @ColumnInfo(name = "title")
@@ -27,6 +33,9 @@ data class Entry(
 
     @ColumnInfo(name = "date")
     val date_seconds: Long,
+
+    @ColumnInfo(name = "ups")
+    val ups: Long,
 
     @ColumnInfo(name = "comments_count")
     val commentsCount: Int,
