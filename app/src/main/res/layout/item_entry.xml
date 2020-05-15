@@ -7,23 +7,34 @@
 
     <ImageView
         android:id="@+id/entry_thumbnail"
-        android:layout_width="90dp"
-        android:layout_height="90dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="@+id/btn_dismiss"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintDimensionRatio="H,1:1"
         tools:src="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/entry_title"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:padding="8dp"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/entry_thumbnail"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/entry_author"
         tools:text="This is a very long title, the card should expand vertically and allow all the text to be displayed." />
+
+    <Button
+        android:id="@+id/btn_dismiss"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dismiss"
+        android:drawableStart="@drawable/ic_delete_sweep_black_24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/entry_date" />
 
     <TextView
         android:id="@+id/entry_author"
@@ -31,9 +42,8 @@
         android:layout_height="wrap_content"
         android:paddingHorizontal="8dp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/entry_title"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/entry_date"
+        app:layout_constraintStart_toEndOf="@+id/entry_thumbnail"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="by Someone" />
 
     <TextView
@@ -52,7 +62,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="entry_author,entry_title"/>
+        app:constraint_referenced_ids="btn_dismiss,entry_title"/>
 
     <View
         android:id="@+id/view"

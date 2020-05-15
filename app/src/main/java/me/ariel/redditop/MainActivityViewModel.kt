@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import me.ariel.redditop.actions.EntryActions
 import me.ariel.redditop.data.EntriesRepository
+import me.ariel.redditop.data.Entry
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -25,5 +26,11 @@ class MainActivityViewModel @Inject constructor(
         refresher
             .doOnComplete { isRefreshing.postValue(false) }
             .subscribe { Timber.d("Refreshed entry: %s", it) }
+    }
+
+    fun dismissEntry(someEntry:Entry) {
+        repository.dismiss(someEntry).subscribe {
+            Timber.d("Dismissed: %s", someEntry.title)
+        }
     }
 }

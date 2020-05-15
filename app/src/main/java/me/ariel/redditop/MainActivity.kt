@@ -6,6 +6,7 @@ import android.text.format.DateUtils.MINUTE_IN_MILLIS
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -32,7 +33,7 @@ class MainActivity : DaggerAppCompatActivity() {
     val viewModel by viewModels<MainActivityViewModel> { viewModelFactory }
 
     private val adapter by lazy {
-        EntryListAdapter { Timber.d("On item clicked: %s", it.title) }
+        EntryListAdapter(viewModel) { Timber.d("On item clicked: %s", it.title) }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,9 +64,11 @@ class EntryItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val thumbnail: ImageView = itemView.findViewById(R.id.entry_thumbnail)
     val date: TextView = itemView.findViewById(R.id.entry_date)
     val author: TextView = itemView.findViewById(R.id.entry_author)
+    val dismissBtn: Button = itemView.findViewById(R.id.btn_dismiss)
 }
 
 class EntryListAdapter(
+    private val viewModel:MainActivityViewModel,
     private val onItemClicked: (Entry) -> Unit
 ) : RecyclerView.Adapter<EntryItemViewHolder>() {
 
@@ -122,6 +125,7 @@ class EntryListAdapter(
         holder.author.text = entry.author
 
         holder.itemView.setOnClickListener { onItemClicked.invoke(entry) }
+        holder.dismissBtn.setOnClickListener { viewModel.dismissEntry(entry) }
 
         val now = Instant.now().atZone(ZoneId.systemDefault()).toEpochSecond() * 1000L
         val creationDate = Instant.ofEpochMilli(entry.date_seconds * 1000L).atZone(ZoneId.systemDefault()).toEpochSecond() * 1000L

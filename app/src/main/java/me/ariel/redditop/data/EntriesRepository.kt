@@ -20,7 +20,7 @@ class EntriesRepository(
     fun create(entry:Entry) = dao.insert(entry)
         .subscribeOn(Schedulers.io())
 
-    fun dismiss(entry:Entry) = dao.insert(entry.copy(isDismissed = true))
+    fun dismiss(entry:Entry) = dao.update(entry.copy(isDismissed = true))
         .subscribeOn(Schedulers.io())
 
 }
